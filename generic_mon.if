@@ -1,3 +1,30 @@
+############################################################################
+#
+# Generic Monitor SELinux interface
+#
+# https://github.com/Laurent-Gaillard/selinux_generic_monitor
+#
+#
+# Copyright (c) 2022 L. Gaillard
+# Author: Laurent Gaillard
+#
+# 
+# This program is under the restrictions of the Apache License 2.0
+# as published by the Apache Software Foundation
+#  http://www.apache.org/licenses/LICENSE-2.0
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# Apache License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.apache.org/licenses/LICENSE-2.0>.
+#
+#
+############################################################################
+
+
 #######################################
 ## <summary>
 ##      The template creates all the objects usefull to an generic_mon derivative application.
