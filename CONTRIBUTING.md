@@ -1,14 +1,14 @@
 How to Submit Patches to the SELinux Generic Monitor Interface Project
 ===============================================================================
-https://github.com/Laurent-Gaillard/selinux_node_exporter
+https://github.com/Laurent-Gaillard/selinux_generic_monitor
 
 This document is intended to act as a guide to help you contribute to the
 SELinux Generic Monitor Interface project.
 
 ## Test Your Code
 
-Unfortunately, we do not have a test suite for the SELinux Generic Monitor Interface
-project.
+Unfortunately, we do not have a test suite for the SELinux Generic Monitor
+Interface project.
 Therefore, you MUST make sure that at the very least your code compile without
 any error on a RHEL 7/8 or CentOS 7/8 using the Makefile from the
 selinux-policy-devel RPM of such GNU/Linux distributions.
