@@ -44,12 +44,13 @@
 #
 template(`generic_mon_app_domain',`
         gen_require(`
-                class dir { manage_dir_perms};
-                class file { manage_file_perms };
-                class lnk_file { manage_lnk_file_perms };
-                class dir { manage_dir_perms };
-
-                class chr_file getattr;
+                class dir               manage_dir_perms;
+                class file              manage_file_perms;
+                class lnk_file          manage_lnk_file_perms;
+                class dir               manage_dir_perms;
+                class capability        net_admin;
+                class process           execmem;
+                class chr_file          getattr;
 
                 type tty_device_t, user_devpts_t;
         ')
@@ -87,47 +88,48 @@ template(`generic_mon_app_domain',`
         type generic_mon_$1_tmp_t;
         files_tmp_file(generic_mon_$1_tmp_t)
 
+        bool	generic_mon_$1_allow_net_admin		false;
+        bool	generic_mon_$1_allow_execmem		false;
+
         #################################################
         #This creates also the transition from initrc_domain to generic_mon_$1_t
         #################################################
         systemd_domain_template(generic_mon_$1)
 
-
-
         #################################################
         #Manage domain objects
         #################################################
-        allow  generic_mon_$1_t  tty_device_t:chr_file         		getattr;
-        allow  generic_mon_$1_t  user_devpts_t:chr_file        		getattr;
-        allow  generic_mon_$1_t  generic_mon_$1_root_t:dir          list_dir_perms;
-        allow  generic_mon_$1_t  generic_mon_$1_root_t:file         read_file_perms;
-        allow  generic_mon_$1_t  generic_mon_$1_root_t:lnk_file     read_lnk_file_perms;
-        allow  generic_mon_$1_t  generic_mon_$1_file_t:dir          search_dir_perms;
-        allow  generic_mon_$1_t  generic_mon_$1_file_t:file         read_file_perms;
-        allow  generic_mon_$1_t  generic_mon_$1_file_t:lnk_file     read_lnk_file_perms;
-        allow  generic_mon_$1_t  generic_mon_$1_usr_t:dir           manage_dir_perms;
-        allow  generic_mon_$1_t  generic_mon_$1_usr_t:file          manage_file_perms;
-        allow  generic_mon_$1_t  generic_mon_$1_usr_t:lnk_file      manage_lnk_file_perms;
-        allow  generic_mon_$1_t  generic_mon_$1_bin_t:dir           list_dir_perms;
-        allow  generic_mon_$1_t  generic_mon_$1_bin_t:file          exec_file_perms;
-        allow  generic_mon_$1_t  generic_mon_$1_bin_t:lnk_file      read_lnk_file_perms;
-        allow  generic_mon_$1_t  generic_mon_$1_lib_t:dir           search_dir_perms;
-        allow  generic_mon_$1_t  generic_mon_$1_lib_t:file          read_file_perms;
-        allow  generic_mon_$1_t  generic_mon_$1_lib_t:lnk_file      read_lnk_file_perms;
-        allow  generic_mon_$1_t  generic_mon_$1_var_t:dir           manage_dir_perms;
-        allow  generic_mon_$1_t  generic_mon_$1_var_t:file          manage_file_perms;
-        allow  generic_mon_$1_t  generic_mon_$1_var_t:lnk_file      manage_lnk_file_perms;
-        allow  generic_mon_$1_t  generic_mon_$1_var_run_t:dir       manage_dir_perms;
-        allow  generic_mon_$1_t  generic_mon_$1_var_run_t:file      manage_file_perms;
-        allow  generic_mon_$1_t  generic_mon_$1_var_run_t:lnk_file  manage_lnk_file_perms;
-        allow  generic_mon_$1_t  generic_mon_$1_log_t:dir           manage_dir_perms;
-        allow  generic_mon_$1_t  generic_mon_$1_log_t:file          {create_file_perms  append_file_perms  read_file_perms };
-        allow  generic_mon_$1_t  generic_mon_$1_tmp_t:dir           manage_dir_perms;
-        allow  generic_mon_$1_t  generic_mon_$1_tmp_t:file          manage_file_perms;
-        allow  generic_mon_$1_t  generic_mon_$1_tmp_t:lnk_file      manage_lnk_file_perms;
+        allow  generic_mon_$1_t  tty_device_t:chr_file           	getattr;
+        allow  generic_mon_$1_t  user_devpts_t:chr_file        	        getattr;
+        allow  generic_mon_$1_t  generic_mon_$1_root_t:dir              list_dir_perms;
+        allow  generic_mon_$1_t  generic_mon_$1_root_t:file             read_file_perms;
+        allow  generic_mon_$1_t  generic_mon_$1_root_t:lnk_file         read_lnk_file_perms;
+        allow  generic_mon_$1_t  generic_mon_$1_file_t:dir              search_dir_perms;
+        allow  generic_mon_$1_t  generic_mon_$1_file_t:file             read_file_perms;
+        allow  generic_mon_$1_t  generic_mon_$1_file_t:lnk_file         read_lnk_file_perms;
+        allow  generic_mon_$1_t  generic_mon_$1_usr_t:dir               manage_dir_perms;
+        allow  generic_mon_$1_t  generic_mon_$1_usr_t:file              manage_file_perms;
+        allow  generic_mon_$1_t  generic_mon_$1_usr_t:lnk_file          manage_lnk_file_perms;
+        allow  generic_mon_$1_t  generic_mon_$1_bin_t:dir               list_dir_perms;
+        allow  generic_mon_$1_t  generic_mon_$1_bin_t:file              exec_file_perms;
+        allow  generic_mon_$1_t  generic_mon_$1_bin_t:lnk_file          read_lnk_file_perms;
+        allow  generic_mon_$1_t  generic_mon_$1_lib_t:dir               search_dir_perms;
+        allow  generic_mon_$1_t  generic_mon_$1_lib_t:file              read_file_perms;
+        allow  generic_mon_$1_t  generic_mon_$1_lib_t:lnk_file          read_lnk_file_perms;
+        allow  generic_mon_$1_t  generic_mon_$1_var_t:dir               manage_dir_perms;
+        allow  generic_mon_$1_t  generic_mon_$1_var_t:file              manage_file_perms;
+        allow  generic_mon_$1_t  generic_mon_$1_var_t:lnk_file          manage_lnk_file_perms;
+        allow  generic_mon_$1_t  generic_mon_$1_var_run_t:dir           manage_dir_perms;
+        allow  generic_mon_$1_t  generic_mon_$1_var_run_t:file          manage_file_perms;
+        allow  generic_mon_$1_t  generic_mon_$1_var_run_t:lnk_file      manage_lnk_file_perms;
+        allow  generic_mon_$1_t  generic_mon_$1_log_t:dir               manage_dir_perms;
+        allow  generic_mon_$1_t  generic_mon_$1_log_t:file              { create_file_perms append_file_perms read_file_perms };
+        allow  generic_mon_$1_t  generic_mon_$1_tmp_t:dir               manage_dir_perms;
+        allow  generic_mon_$1_t  generic_mon_$1_tmp_t:file              manage_file_perms;
+        allow  generic_mon_$1_t  generic_mon_$1_tmp_t:lnk_file          manage_lnk_file_perms;
 
         #################################################
-        #Access to other objetcts
+        #Access to other objects
         #################################################
         corecmd_exec_shell(generic_mon_$1_t)
         corecmd_exec_bin(generic_mon_$1_t)
@@ -139,6 +141,17 @@ template(`generic_mon_app_domain',`
         files_exec_usr_files(generic_mon_$1_t)
         files_search_locks(generic_mon_$1_t)
 
+        #################################################
+        #Extend policy with powerfull perms (be carefull)
+        #################################################
+        if (generic_mon_$1_allow_net_admin) {
+                allow generic_mon_$1_t self:capability net_admin;
+        }
+
+        if (generic_mon_$1_allow_execmem) {
+                allow generic_mon_$1_t self:process execmem;
+        }
+
 ')
 
 
@@ -146,9 +159,9 @@ template(`generic_mon_app_domain',`
 ## <summary>
 ##      Authorize to create a listening socket.
 ## </summary>
-## <param name="domain">
+## <param name="domain subname">
 ##      <summary>
-##      The domain to be authorized to create socket.
+##      The domain subname to be authorized to create socket.
 ##      </summary>
 ## </param>
 #
@@ -159,27 +172,25 @@ interface(`generic_mon_listening_socket',`
                 type node_t;
                 type sysctl_net_t;
 
-                class capability { net_admin };
-                class tcp_socket { create_stream_socket_perms name_bind node_bind };
-                class udp_socket { create_stream_socket_perms name_bind node_bind };
-                class unix_dgram_socket { create_stream_socket_perms };
-                class unix_stream_socket { create_stream_socket_perms };
-                class file { getattr open read };
-                class dir { search };
+                class tcp_socket                { create_stream_socket_perms name_bind node_bind };
+                class udp_socket                { create_stream_socket_perms name_bind node_bind };
+                class unix_dgram_socket         { create_stream_socket_perms };
+                class unix_stream_socket        { create_stream_socket_perms };
+                class file                      { getattr open read };
+                class dir                       search;
         ')
 
-                allow generic_mon_$1_t self:capability { net_admin };
-                allow generic_mon_$1_t self:tcp_socket { create_stream_socket_perms };
-                allow generic_mon_$1_t self:udp_socket { create_stream_socket_perms };
-                allow generic_mon_$1_t generic_mon_$1_port_t:tcp_socket { name_bind };
-                allow generic_mon_$1_t generic_mon_$1_port_t:udp_socket { name_bind };
+                allow generic_mon_$1_t self:tcp_socket                  { create_stream_socket_perms };
+                allow generic_mon_$1_t self:udp_socket                  { create_stream_socket_perms };
+                allow generic_mon_$1_t generic_mon_$1_port_t:tcp_socket name_bind;
+                allow generic_mon_$1_t generic_mon_$1_port_t:udp_socket name_bind;
 
-                allow generic_mon_$1_t net_conf_t:file { getattr open read };
+                allow generic_mon_$1_t net_conf_t:file                  { getattr open read };
 
-                allow generic_mon_$1_t node_t:tcp_socket { node_bind };
-                allow generic_mon_$1_t node_t:udp_socket { node_bind };
-                allow generic_mon_$1_t sysctl_net_t:dir { search };
-                allow generic_mon_$1_t sysctl_net_t:file { getattr open read };
+                allow generic_mon_$1_t node_t:tcp_socket                node_bind;
+                allow generic_mon_$1_t node_t:udp_socket                node_bind;
+                allow generic_mon_$1_t sysctl_net_t:dir                 search;
+                allow generic_mon_$1_t sysctl_net_t:file                { getattr open read };
 ')
 
 ########################################
@@ -188,7 +199,7 @@ interface(`generic_mon_listening_socket',`
 ## </summary>
 ## <param name="domain subname">
 ##      <summary>
-##      The domain to be authorized to connect to socket.
+##      The domain subname to be authorized to connect to socket.
 ##      </summary>
 ## </param>
 #
@@ -196,19 +207,19 @@ interface(`generic_mon_connecting_socket',`
         gen_require(`
                 type generic_mon_$1_t , generic_mon_$1_port_t;
 
-                class tcp_socket { create_socket_perms name_connect node_bind };
-                class udp_socket { create_socket_perms node_bind };
-                class unix_dgram_socket { create_socket_perms };
-                class unix_stream_socket { create_socket_perms };
+                class tcp_socket                { create_socket_perms name_connect node_bind };
+                class udp_socket                { create_socket_perms node_bind };
+                class unix_dgram_socket         create_socket_perms;
+                class unix_stream_socket        create_socket_perms;
         ')
 
-                allow generic_mon_$1_t self:tcp_socket { create_socket_perms };
-                allow generic_mon_$1_t self:udp_socket { create_socket_perms };
-                allow generic_mon_$1_t self:unix_dgram_socket { create_socket_perms };
-                allow generic_mon_$1_t self:unix_stream_socket { create_socket_perms };
-                allow generic_mon_$1_t node_t:tcp_socket { node_bind };
-                allow generic_mon_$1_t node_t:udp_socket { node_bind };
-                allow generic_mon_$1_t generic_mon_$1_port_t:tcp_socket { name_connect };
+                allow generic_mon_$1_t self:tcp_socket                  create_socket_perms;
+                allow generic_mon_$1_t self:udp_socket                  create_socket_perms;
+                allow generic_mon_$1_t self:unix_dgram_socket           create_socket_perms;
+                allow generic_mon_$1_t self:unix_stream_socket          create_socket_perms;
+                allow generic_mon_$1_t node_t:tcp_socket                node_bind;
+                allow generic_mon_$1_t node_t:udp_socket                node_bind;
+                allow generic_mon_$1_t generic_mon_$1_port_t:tcp_socket name_connect;
 
 ')
 
@@ -218,7 +229,7 @@ interface(`generic_mon_connecting_socket',`
 ## </summary>
 ## <param name="domain subname">
 ##      <summary>
-##      The domain to be authorized to connect to socket.
+##      The domain subname to be authorized to connect to socket.
 ##      </summary>
 ## </param>
 #
@@ -229,8 +240,7 @@ interface(`generic_mon_commom_access',`
                 type generic_mon_$1_t;
                 type ld_so_cache_t;
 
-                class file { execute };
-                class process { execmem };
+                class file      { execute };
         ')
 
                 files_read_non_security_files(generic_mon_$1_t)
@@ -241,24 +251,21 @@ interface(`generic_mon_commom_access',`
                 fs_getattr_all_fs(generic_mon_$1_t)
                 fs_getattr_all_dirs(generic_mon_$1_t)
 
-                allow generic_mon_$1_t self:process execmem;
-
                 kernel_read_network_state(generic_mon_$1_t)
                 kernel_read_software_raid_state(generic_mon_$1_t)
 
                 files_exec_usr_files(generic_mon_$1_t)
 
-                allow generic_mon_$1_t non_security_file_type:{dir file lnk_file sock_file fifo_file chr_file blk_file}  getattr;
+                allow generic_mon_$1_t non_security_file_type:dir_file_class_set getattr;
 ')
-
 
 ########################################
 ## <summary>
-##      Ensure pid files are labellized correctly.
+##      Ensure pid files are labelled correctly.
 ## </summary>
 ## <param name="domain subname">
 ##      <summary>
-##      The domain to be authorized.
+##      The domain subname to be authorized.
 ##      </summary>
 ## </param>
 #
@@ -272,11 +279,13 @@ interface(`generic_mon_pid_file_trans',`
         ')
                 # Be able to go to and search through /run or /var/run, ...
                 files_search_pids(generic_mon_$1_t)
+                
                 # Make sure that, if generic_mon_$1_t writes a pid file, it gets the proper context
                 files_pid_filetrans(generic_mon_$1_t, generic_mon_$1_var_run_t, file)
+                
                 # Be able to manage its own pid files and dirs
-                allow generic_mon_$1_t generic_mon_$1_var_run_t:file manage_file_perms;
-                allow generic_mon_$1_t generic_mon_$1_var_run_t:dir manage_dir_perms;
+                allow generic_mon_$1_t generic_mon_$1_var_run_t:file    manage_file_perms;
+                allow generic_mon_$1_t generic_mon_$1_var_run_t:dir     manage_dir_perms;
 ')
 
 
@@ -286,7 +295,7 @@ interface(`generic_mon_pid_file_trans',`
 ## </summary>
 ## <param name="domain subname">
 ##      <summary>
-##      The domain to be authorized to sudo.
+##      The domain subname to be authorized to sudo.
 ##      </summary>
 ## </param>
 #
@@ -298,6 +307,7 @@ interface(`generic_mon_sudo_exec',`
                 class process { noatsecure rlimitinh siginh };
         ')
                 sudo_exec(generic_mon_$1_t)
+                
                 #Execute chkpwd in the target domain
                 auth_domtrans_chk_passwd(generic_mon_$1_t)
                 allow generic_mon_$1_t chkpwd_t:process { noatsecure rlimitinh siginh };
@@ -310,7 +320,7 @@ interface(`generic_mon_sudo_exec',`
 ## </summary>
 ## <param name="domain subname">
 ##      <summary>
-##      The domain to be authorized to sudo.
+##      The domain subname to be authorized to sudo.
 ##      </summary>
 ## </param>
 #
@@ -319,22 +329,22 @@ interface(`generic_mon_kernel_message',`
                 type generic_mon_$1_t;
                 type kernel_t;
 
-                class system { syslog_read };
-                class unix_dgram_socket { sendto };
+                class system            syslog_read;
+                class unix_dgram_socket sendto;
         ')
                 dev_read_kmsg(generic_mon_$1_t)
-                allow generic_mon_$1_t kernel_t:system syslog_read;
-                allow generic_mon_$1_t kernel_t:unix_dgram_socket sendto;
+                allow generic_mon_$1_t kernel_t:system                  syslog_read;
+                allow generic_mon_$1_t kernel_t:unix_dgram_socket       sendto;
 ')
 
 
 ########################################
 ## <summary>
-##      Manage tmp files and ensure they are labellized correctly.
+##      Manage tmp files and ensure they are labelled correctly.
 ## </summary>
 ## <param name="domain subname">
 ##      <summary>
-##      The domain to be authorized.
+##      The domain subname to be authorized.
 ##      </summary>
 ## </param>
 #
@@ -343,9 +353,8 @@ interface(`generic_mon_manage_tmp_files',`
                 type generic_mon_$1_t;
         ')
 
-                #Write files to tmp dirs
+                #Write files to tmp dirs and ensure tmp files will have the good context
                 files_tmp_filetrans(generic_mon_$1_t, generic_mon_$1_tmp_t, file)
-                #Ensure tmp files will have the good contect
                 files_manage_generic_tmp_files(generic_mon_$1_t)
 
 ')
@@ -357,7 +366,7 @@ interface(`generic_mon_manage_tmp_files',`
 ## </summary>
 ## <param name="domain subname">
 ##      <summary>
-##      The domain to be authorized.
+##      The domain subname to be authorized.
 ##      </summary>
 ## </param>
 #
@@ -365,6 +374,7 @@ interface(`generic_mon_dmesg',`
         gen_require(`
                 type generic_mon_$1_t;
                 type dmesg_exec_t;
+                
                 class file { execute execute_no_trans };
         ')
 
@@ -379,7 +389,7 @@ interface(`generic_mon_dmesg',`
 ## </summary>
 ## <param name="domain subname">
 ##      <summary>
-##      The domain to be authorized.
+##      The domain subname to be authorized.
 ##      </summary>
 ## </param>
 #
@@ -387,6 +397,7 @@ interface(`generic_mon_systat',`
         gen_require(`
                 type generic_mon_$1_t;
                 type sysstat_exec_t;
+               
                 class file { execute execute_no_trans };
         ')
 
@@ -401,7 +412,7 @@ interface(`generic_mon_systat',`
 ## </summary>
 ## <param name="domain subname">
 ##      <summary>
-##      The domain to be authorized.
+##      The domain subname to be authorized.
 ##      </summary>
 ## </param>
 #
@@ -409,7 +420,8 @@ interface(`generic_mon_write_devlog',`
         gen_require(`
                 type generic_mon_$1_t;
                 type devlog_t;
-                class sock_file { write };
+                
+                class sock_file write;
         ')
 
         allow generic_mon_$1_t devlog_t:sock_file write;
@@ -422,7 +434,7 @@ interface(`generic_mon_write_devlog',`
 ## </summary>
 ## <param name="domain subname">
 ##      <summary>
-##      The domain to be authorized.
+##      The domain subname to be authorized.
 ##      </summary>
 ## </param>
 #
@@ -430,7 +442,9 @@ interface(`generic_mon_service_status',`
         gen_require(`
                 type generic_mon_$1_t;
                 type systemd_unit_file_t;
-                class service { status };
+                
+                class service status;
+
                 attribute systemd_unit_file_type;
         ')
 
@@ -447,7 +461,7 @@ interface(`generic_mon_service_status',`
 ## </summary>
 ## <param name="domain subname">
 ##      <summary>
-##      The domain to be authorized.
+##      The domain subname to be authorized.
 ##      </summary>
 ## </param>
 #
@@ -455,10 +469,11 @@ interface(`generic_mon_read_dir_auditd_log',`
         gen_require(`
                 type generic_mon_$1_t;
                 type auditd_log_t;
-                class dir { getattr open read };
+
+                class dir read_file_perms;
         ')
 
-        allow generic_mon_$1_t auditd_log_t:dir { getattr open read };
+        allow generic_mon_$1_t auditd_log_t:dir read_file_perms;
 
 ')
 
@@ -468,13 +483,14 @@ interface(`generic_mon_read_dir_auditd_log',`
 ## </summary>
 ## <param name="domain subname">
 ##      <summary>
-##      The domain to be authorized.
+##      The domain subname to be authorized.
 ##      </summary>
 ## </param>
 #
 interface(`generic_mon_monitoring_metrics',`
         gen_require(`
                 type generic_mon_$1_t;
+                
                 attribute metrics_monitor_port;
         ')
 
