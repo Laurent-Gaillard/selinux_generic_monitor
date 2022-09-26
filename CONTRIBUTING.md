@@ -1,6 +1,6 @@
 How to Submit Patches to the SELinux Generic Monitor Interface Project
 ===============================================================================
-https://github.com/Laurent-Gaillard/selinux_generic_monitor
+<https://github.com/Laurent-Gaillard/selinux_generic_monitor>
 
 This document is intended to act as a guide to help you contribute to the
 SELinux Generic Monitor Interface project.
@@ -131,4 +131,4 @@ your patch and include it in the main source repository.
 
 ### Submitting via GitHub
 
-See [this guide](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request) if you've never done this before.
+See [this guide](<https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request>) if you've never done this before.
